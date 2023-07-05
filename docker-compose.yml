@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  gateway:
+    image: nginx:1.21.6-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
+      - ui
+
+  api:
+    image: node:alpine
+    container_name: expense-tracker-api
+    working_dir: /usr/expense-tracker/api
+    ports:
+      - 5000:5000
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: expense-tracker
+      DB_USER: root
+      DB_PASSWORD: admin
+    volumes:
+      - ./api:/usr/expense-tracker/api
+    command: npm run start:dev
+
+  ui:
+    image: node:alpine
+    container_name: expense-tracker-ui
+    working_dir: /usr/expense-tracker/ui
+    ports:
+      - 3000:3000
+    volumes:
+      - ./ui:/usr/expense-tracker/ui
+    command: npm run dev
+
+  db:
+    image: postgres:14.2
+    restart: always
+    environment:
+      POSTGRES_DB: expense-tracker
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+    container_name: expense-tracker-db
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
