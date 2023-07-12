@@ -130,3 +130,4 @@ dist
 .pnp.*
 
 pgdata
+vite.config.ts.timestamp*
