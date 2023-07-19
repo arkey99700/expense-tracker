@@ -18,7 +18,7 @@ services:
     ports:
       - 5000:5000
     environment:
-      DB_HOST: localhost
+      DB_HOST: db
       DB_PORT: 5432
       DB_NAME: expense-tracker
       DB_USERNAME: root
