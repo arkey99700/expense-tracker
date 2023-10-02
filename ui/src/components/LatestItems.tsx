@@ -1,6 +1,6 @@
 import { Chip, Stack } from "@mui/material";
 
-export default function Chips() {
+export default function LatestItems() {
   return (
     <Stack direction="row" spacing={2} pt={2}>
       <Chip

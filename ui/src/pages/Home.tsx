@@ -1,8 +1,10 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import Chips from "../components/Chips";
+import LatestItems from "../components/LatestItems";
 import { Cell, Pie, PieChart } from "recharts";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   const data = [
     { name: "Расходы", value: 600, fill: "crimson" },
     { name: "Доходы", value: 400, fill: "orange" },
@@ -10,7 +12,7 @@ export default function Home() {
 
   return (
     <>
-      <Chips />
+      <LatestItems />
       <Box>
         <PieChart width={400} height={400}>
           <Pie label data={data} dataKey="value">
@@ -28,7 +30,8 @@ export default function Home() {
           variant="contained"
           sx={{ height: "75px", fontSize: "24px", textTransform: "unset" }}
           color="primary"
-          size="large">
+          size="large"
+          onClick={() => navigate("/income/add")}>
           Добавить доход
         </Button>
         <Button
