@@ -1,5 +1,4 @@
 import { DataSource } from "typeorm";
-import { ExpenseCategory } from "./entity/expense-category";
 import { ExpenseItem } from "./entity/expense-item";
 import { ExpenseType } from "./entity/expense-type";
 import { IncomeItem } from "./entity/income-item";
@@ -14,7 +13,7 @@ export const dataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: true,
-  entities: [ExpenseCategory, ExpenseItem, ExpenseType, IncomeItem, IncomeType],
+  entities: [ExpenseItem, ExpenseType, IncomeItem, IncomeType],
   subscribers: [],
   migrations: [],
 });

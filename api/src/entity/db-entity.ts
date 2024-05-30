@@ -7,10 +7,10 @@ import {
 } from "typeorm";
 
 export class DBEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @Column()
+  @Column({ type: "varchar", length: 255 })
   name: string;
 
   @CreateDateColumn()

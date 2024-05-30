@@ -4,10 +4,10 @@ import { ExpenseType } from "./expense-type";
 
 @Entity()
 export class ExpenseItem extends DBEntity {
-  @Column()
+  @Column({ type: "numeric", precision: 11, scale: 2 })
   value: number;
 
   @OneToOne(() => ExpenseType)
-  @JoinColumn()
+  @JoinColumn({ name: "type" })
   type: ExpenseType;
 }

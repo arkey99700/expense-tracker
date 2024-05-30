@@ -1,5 +1,5 @@
 import express from "express";
-import { ExpenseCategory } from "./src/entity/expense-category";
+import cors from "cors";
 import { ExpenseType } from "./src/entity/expense-type";
 import { ExpenseItem } from "./src/entity/expense-item";
 import { IncomeType } from "./src/entity/income-type";
@@ -13,9 +13,9 @@ connectToDatabase();
 const app = express();
 const port = process.env.SERVER_PORT;
 
+app.use(cors({ origin: process.env.API_URL }));
 app.use(bodyParser.json());
 
-app.use("/expense/category", crudRouter(ExpenseCategory));
 app.use("/expense/type", crudRouter(ExpenseType));
 app.use("/expense/item", crudRouter(ExpenseItem));
 app.use("/income/type", crudRouter(IncomeType));

@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { ExpenseCategory } from "./entity/expense-category";
 import { ExpenseType } from "./entity/expense-type";
 import { ExpenseItem } from "./entity/expense-item";
 import { IncomeType } from "./entity/income-type";
@@ -8,7 +7,6 @@ import crudRouter from "./router/crudRouter";
 
 const appRouter = Router();
 
-appRouter.use("/expense/category", crudRouter(ExpenseCategory));
 appRouter.use("/expense/type", crudRouter(ExpenseType));
 appRouter.use("/expense/item", crudRouter(ExpenseItem));
 appRouter.use("/income/type", crudRouter(IncomeType));
