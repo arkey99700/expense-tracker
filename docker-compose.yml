@@ -1,16 +1,6 @@
 version: "3"
 
 services:
-  gateway:
-    image: nginx:1.21.6-alpine
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - api
-      - ui
-
   api:
     image: node:alpine
     container_name: expense-tracker-api
@@ -38,7 +28,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      VITE_API_URL: http://localhost:3000
+      VITE_API_URL: http://localhost:5000
     volumes:
       - ./ui:/usr/expense-tracker/ui
     command: sh -c "npm install && npm run dev"
