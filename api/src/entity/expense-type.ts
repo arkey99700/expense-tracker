@@ -1,4 +1,4 @@
-import { Entity, OneToOne, JoinColumn } from "typeorm";
+import { Entity } from "typeorm";
 import { DBEntity } from "./db-entity";
 
 @Entity()

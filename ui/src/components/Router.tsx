@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "../pages/Home";
 import AddIncomePage from "../pages/AddIncomePage";
+import AddExpensePage from "../pages/AddExpensePage";
 
 export default function Router() {
   return (
@@ -16,7 +17,7 @@ export default function Router() {
           </Route>
           <Route path="expense">
             <Route index></Route>
-            <Route path="add"></Route>
+            <Route path="add" element={<AddExpensePage />}></Route>
             <Route path=":id"></Route>
           </Route>
         </Route>

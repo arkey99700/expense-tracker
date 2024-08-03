@@ -3,7 +3,6 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn,
 } from "typeorm";
 
 export class DBEntity extends BaseEntity {
@@ -15,7 +14,4 @@ export class DBEntity extends BaseEntity {
 
   @CreateDateColumn()
   dateCreate: Date;
-
-  @UpdateDateColumn()
-  dateEdit: Date;
 }

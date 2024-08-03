@@ -1,33 +1,50 @@
+import { Dispatch, SetStateAction, ReactNode } from "react";
 import { List, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
 
-type Props = {
-  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+type MenuProps = {
+  setMenuOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Menu({ setMenuOpen }: Props) {
+type MenuItemProps = {
+  link: string;
+  name: string;
+  onClick: () => void;
+  icon?: ReactNode;
+};
+
+const menuData = [
+  {
+    name: "Добавить доход",
+    link: "/income/add",
+  },
+  {
+    name: "Добавить расход",
+    link: "/expense/add",
+  },
+];
+
+const MenuItem = function ({ link, name, onClick }: MenuItemProps) {
+  return (
+    <Link to={link} onClick={onClick}>
+      <ListItemButton sx={{ paddingRight: "64px" }}>
+        <ListItemText primary={name}></ListItemText>
+      </ListItemButton>
+    </Link>
+  );
+};
+
+export default function Menu({ setMenuOpen }: MenuProps) {
   return (
     <List>
-      <Link to="income/add" onClick={() => setMenuOpen(false)}>
-        <ListItemButton>
-          <ListItemText primary="Добавить доход"></ListItemText>
-        </ListItemButton>
-      </Link>
-      <ListItemButton>
-        <ListItemText primary="Добавить расход"></ListItemText>
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemText primary="Добавить новую категорию"></ListItemText>
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemText primary="Кошельки"></ListItemText>
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemText primary="Настройки"></ListItemText>
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemText primary="Поддержка"></ListItemText>
-      </ListItemButton>
+      {menuData.map((menuItem) => (
+        <MenuItem
+          key={menuItem.name}
+          link={menuItem.link}
+          name={menuItem.name}
+          onClick={() => setMenuOpen(false)}
+        />
+      ))}
     </List>
   );
 }

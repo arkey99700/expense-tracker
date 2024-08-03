@@ -7,7 +7,10 @@ export class IncomeItem extends DBEntity {
   @Column({ type: "numeric", precision: 11, scale: 2 })
   value: number;
 
-  @OneToOne(() => IncomeType)
-  @JoinColumn({ name: "type" })
+  @Column()
+  typeId: number;
+
+  @OneToOne((type) => IncomeType, (incomeType) => incomeType.id)
+  @JoinColumn({ name: "typeId", referencedColumnName: "id" })
   type: IncomeType;
 }

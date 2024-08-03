@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
-import AddIncome from "../components/AddIncome";
+import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
+import AddExpense from "../components/AddExpense";
 
-export default function AddIncomePage() {
+export default function AddExpensePage() {
   return (
     <>
       <Box
@@ -12,14 +12,14 @@ export default function AddIncomePage() {
           columnGap: "10px",
           margin: "20px 0",
         }}>
-        <ArrowCircleUpIcon sx={{ width: "40px", height: "40px" }} />
+        <ArrowCircleDownIcon sx={{ width: "40px", height: "40px" }} />
         <Typography
           component="h1"
           sx={{ fontSize: "30px", textAlign: "center" }}>
-          Добавление дохода
+          Добавление расхода
         </Typography>
       </Box>
-      <AddIncome />
+      <AddExpense />
     </>
   );
 }

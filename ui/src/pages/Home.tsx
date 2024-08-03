@@ -2,27 +2,18 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import LatestItems from "../components/LatestItems";
 import { Cell, Pie, PieChart } from "recharts";
 import { useNavigate } from "react-router-dom";
+import Diagram from "../components/Diagram";
 
 export default function Home() {
   const navigate = useNavigate();
-  const data = [
-    { name: "Расходы", value: 600, fill: "crimson" },
-    { name: "Доходы", value: 400, fill: "orange" },
-  ];
 
   return (
     <>
       <LatestItems />
-      <Box>
-        <PieChart width={400} height={400}>
-          <Pie label data={data} dataKey="value">
-            {data.map((entry, index) => (
-              <Cell key={index} fill={entry.fill}></Cell>
-            ))}
-          </Pie>
-        </PieChart>
-      </Box>
-      <Typography component="h2" sx={{ fontSize: "32px", textAlign: "center" }}>
+      <Diagram />
+      <Typography
+        component="h2"
+        sx={{ fontSize: "32px", textAlign: "center", whiteSpace: "nowrap" }}>
         Есть к чему стремиться!
       </Typography>
       <Stack spacing={2} mt={5}>
@@ -43,7 +34,8 @@ export default function Home() {
             textTransform: "unset",
             height: "75px",
             "&:hover": { backgroundColor: "gray" },
-          }}>
+          }}
+          onClick={() => navigate("/expense/add")}>
           Добавить расход
         </Button>
       </Stack>

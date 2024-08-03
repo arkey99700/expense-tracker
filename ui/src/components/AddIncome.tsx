@@ -13,7 +13,7 @@ const incomeSources = ["Зарплата", "Аванс", "Подарок", "Пр
 
 const filter = createFilterOptions<string>();
 
-export default function AddIncomeForm() {
+export default function AddIncome() {
   return (
     <Box
       component="form"

@@ -21,7 +21,8 @@ export default function Header() {
       <AppBar
         position="relative"
         component="header"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar sx={{ minHeight: "75px", justifyContent: "space-between" }}>
           <IconButton onClick={() => setMenuOpen(!menuOpen)}>
             <MenuIcon sx={{ color: "white" }} />
@@ -29,7 +30,8 @@ export default function Header() {
           <Link to="/">
             <Typography
               component="h1"
-              sx={{ fontSize: "32px", fontWeight: 700, color: "white" }}>
+              sx={{ fontSize: "32px", fontWeight: 700, color: "white" }}
+            >
               Expense Tracker
             </Typography>
           </Link>
@@ -41,7 +43,9 @@ export default function Header() {
         </Toolbar>
       </AppBar>
       <Drawer open={menuOpen} onClose={() => setMenuOpen((open) => !open)}>
-        <Box sx={{ width: "75vw", paddingTop: "75px" }}>
+        <Box
+          sx={{ maxWidth: "75vw", paddingTop: "75px" }}
+        >
           <Menu setMenuOpen={setMenuOpen} />
         </Box>
       </Drawer>
