@@ -1,9 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-} from "typeorm";
+import { BaseEntity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 export class DBEntity extends BaseEntity {
   @PrimaryGeneratedColumn("increment")
@@ -11,7 +6,4 @@ export class DBEntity extends BaseEntity {
 
   @Column({ type: "varchar", length: 255 })
   name: string;
-
-  @CreateDateColumn()
-  dateCreate: Date;
 }
