@@ -1,25 +1,15 @@
-import { Box, Typography } from "@mui/material";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
-import AddIncome from "../components/AddIncome";
+import PageHeader from "../components/PageHeader";
+import OperationItemEditForm from "../components/OperationItemEditForm";
 
 export default function AddIncomePage() {
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          columnGap: "10px",
-          margin: "20px 0",
-        }}>
-        <ArrowCircleUpIcon sx={{ width: "40px", height: "40px" }} />
-        <Typography
-          component="h1"
-          sx={{ fontSize: "30px", textAlign: "center" }}>
-          Добавление дохода
-        </Typography>
-      </Box>
-      <AddIncome />
+      <PageHeader
+        title="Добавление дохода"
+        icon={<ArrowCircleUpIcon sx={{ width: "40px", height: "40px" }} />}
+      ></PageHeader>
+      <OperationItemEditForm operation="income" />
     </>
   );
 }

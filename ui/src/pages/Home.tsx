@@ -1,6 +1,5 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import LatestItems from "../components/LatestItems";
-import { Cell, Pie, PieChart } from "recharts";
 import { useNavigate } from "react-router-dom";
 import Diagram from "../components/Diagram";
 
@@ -13,7 +12,8 @@ export default function Home() {
       <Diagram />
       <Typography
         component="h2"
-        sx={{ fontSize: "32px", textAlign: "center", whiteSpace: "nowrap" }}>
+        sx={{ fontSize: "32px", textAlign: "center", whiteSpace: "nowrap" }}
+      >
         Есть к чему стремиться!
       </Typography>
       <Stack spacing={2} mt={5}>
@@ -22,7 +22,8 @@ export default function Home() {
           sx={{ height: "75px", fontSize: "24px", textTransform: "unset" }}
           color="primary"
           size="large"
-          onClick={() => navigate("/income/add")}>
+          onClick={() => navigate("/income/add")}
+        >
           Добавить доход
         </Button>
         <Button
@@ -35,7 +36,8 @@ export default function Home() {
             height: "75px",
             "&:hover": { backgroundColor: "gray" },
           }}
-          onClick={() => navigate("/expense/add")}>
+          onClick={() => navigate("/expense/add")}
+        >
           Добавить расход
         </Button>
       </Stack>

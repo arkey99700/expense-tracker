@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   Autocomplete,
   Box,
@@ -8,27 +8,43 @@ import {
   IconButton,
   Snackbar,
   Alert,
+  capitalize,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClearIcon from "@mui/icons-material/Clear";
 import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
-import routes from "../api/Routes";
-import { ExpenseType } from "../types/entities/ExpenseType";
+import routes, { RouteName } from "../api/Routes";
 import NumberInput from "./NumberInput";
 import { maxSumNumber } from "../utils/utils";
+import { OperationType } from "../types/OperationType";
+import { ExpenseOrIncome } from "../types/entities/ExpenseOrIncome";
+
+type Props = {
+  operation: OperationType;
+  currentName?: string;
+  currentSum?: number;
+  currentDate?: Dayjs;
+  currentType?: string;
+};
 
 const stringFilter = createFilterOptions<string>();
 
-export default function AddExpense() {
-  const [expenseTypes, setExpenseTypes] = useState<
-    Pick<ExpenseType, "id" | "name">[]
+export default function OperationItemEditForm({
+  operation,
+  currentName,
+  currentSum,
+  currentDate,
+  currentType,
+}: Props) {
+  const [types, setTypes] = useState<
+    ExpenseOrIncome<typeof operation, "type">[]
   >([]);
-  const [name, setName] = useState<string>("");
-  const [sum, setSum] = useState<number>(0);
-  const [date, setDate] = useState<Dayjs>(dayjs());
-  const [type, setType] = useState<string>("");
+  const [name, setName] = useState<string>(currentName ?? "");
+  const [sum, setSum] = useState<number>(currentSum ?? 0);
+  const [date, setDate] = useState<Dayjs>(currentDate ?? dayjs());
+  const [type, setType] = useState<string>(currentType ?? "");
 
   const [nameError, setNameError] = useState<boolean>(false);
   const [sumError, setSumError] = useState<boolean>(false);
@@ -38,12 +54,14 @@ export default function AddExpense() {
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
   useEffect(() => {
-    axios.get<ExpenseType[]>(routes.ExpenseType).then((result): void => {
-      setExpenseTypes(
-        result.data.map((type) => ({ id: type.id, name: type.name }))
-      );
-    });
-  }, []);
+    axios
+      .get<ExpenseOrIncome<typeof operation, "type">[]>(
+        routes[`${capitalize(operation)}Type` as RouteName]
+      )
+      .then((result): void => {
+        setTypes(result.data);
+      });
+  }, [operation]);
 
   const submitForm = async (): Promise<void> => {
     if (!name) {
@@ -62,13 +80,11 @@ export default function AddExpense() {
       return setTypeError(true);
     }
 
-    let typeId = expenseTypes.find(
-      (expenseType) => expenseType.name === type
-    )?.id;
+    let typeId = types.find((existingType) => existingType.name === type)?.id;
 
     if (!typeId) {
       await axios
-        .post(routes.ExpenseType, {
+        .post(routes[`${capitalize(operation)}Type` as RouteName], {
           name: type,
         })
         .then((result) => {
@@ -77,7 +93,7 @@ export default function AddExpense() {
     }
 
     axios
-      .post(routes.ExpenseItem, {
+      .post(routes[`${capitalize(operation)}Item` as RouteName], {
         name,
         value: sum,
         dateCreate: date.toDate(),
@@ -165,18 +181,19 @@ export default function AddExpense() {
           id="source"
           popupIcon={<ExpandMoreIcon />}
           options={
-            expenseTypes.length
-              ? expenseTypes
-                  .sort((a, b) => (a > b ? 1 : -1))
-                  .map((type) => type.name)
+            types.length
+              ? types.sort((a, b) => (a > b ? 1 : -1)).map((type) => type.name)
               : []
           }
           renderInput={(params) => (
             <TextField
               {...params}
               error={typeError}
-              helperText={typeError && "Введите тип расхода"}
-              label="Тип расхода"
+              helperText={
+                typeError &&
+                `Введите тип ${operation === "expense" ? "расхода" : "дохода"}`
+              }
+              label={`Тип ${operation === "expense" ? "расхода" : "дохода"}`}
             />
           )}
           getOptionLabel={(option) => option}
@@ -212,7 +229,7 @@ export default function AddExpense() {
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         open={showAlert}
-        autoHideDuration={5000}
+        autoHideDuration={4000}
         onClose={() => setShowAlert(false)}
       >
         <Alert
@@ -220,7 +237,7 @@ export default function AddExpense() {
           variant="filled"
           onClose={() => setShowAlert(false)}
         >
-          Расход успешно добавлен!
+          {operation === "expense" ? "Расход" : "Доход"} успешно добавлен!
         </Alert>
       </Snackbar>
     </>

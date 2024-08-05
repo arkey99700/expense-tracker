@@ -1,4 +1,9 @@
-import { Dispatch, SetStateAction, ReactNode } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  ReactElement,
+  MouseEventHandler,
+} from "react";
 import { List, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -9,8 +14,8 @@ type MenuProps = {
 type MenuItemProps = {
   link: string;
   name: string;
-  onClick: () => void;
-  icon?: ReactNode;
+  onClick: MouseEventHandler<HTMLAnchorElement>;
+  icon?: ReactElement;
 };
 
 const menuData = [
