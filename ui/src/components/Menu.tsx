@@ -27,6 +27,14 @@ const menuData = [
     name: "Добавить расход",
     link: "/expense/add",
   },
+  {
+    name: "Список доходов",
+    link: "/income/list",
+  },
+  {
+    name: "Список расходов",
+    link: "/expense/list",
+  },
 ];
 
 const MenuItem = function ({ link, name, onClick }: MenuItemProps) {

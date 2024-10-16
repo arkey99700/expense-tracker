@@ -97,7 +97,7 @@ export default function OperationItemEditForm({
         name,
         value: sum,
         dateCreate: date.toDate(),
-        typeId,
+        type: typeId,
       })
       .then(() => {
         setShowAlert(true);
@@ -183,7 +183,7 @@ export default function OperationItemEditForm({
           options={
             types.length
               ? types.sort((a, b) => (a > b ? 1 : -1)).map((type) => type.name)
-              : []
+              : ["Новый тип расхода"]
           }
           renderInput={(params) => (
             <TextField

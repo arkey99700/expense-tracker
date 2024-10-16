@@ -1,8 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "../pages/Home";
-import AddIncomePage from "../pages/AddIncomePage";
-import AddExpensePage from "../pages/AddExpensePage";
+import AddIncome from "../pages/AddIncome";
+import AddExpense from "../pages/AddExpense";
+import IncomeList from "../pages/IncomeList";
+import ExpenseList from "../pages/ExpenseList";
 
 export default function Router() {
   return (
@@ -12,12 +14,14 @@ export default function Router() {
           <Route index element={<Home />}></Route>
           <Route path="income">
             <Route index></Route>
-            <Route path="add" element={<AddIncomePage />}></Route>
+            <Route path="add" element={<AddIncome />}></Route>
+            <Route path="list" element={<IncomeList />}></Route>
             <Route path=":id"></Route>
           </Route>
           <Route path="expense">
             <Route index></Route>
-            <Route path="add" element={<AddExpensePage />}></Route>
+            <Route path="add" element={<AddExpense />}></Route>
+            <Route path="list" element={<ExpenseList />}></Route>
             <Route path=":id"></Route>
           </Route>
         </Route>

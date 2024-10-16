@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "tsc && node dist/main.js"
+    "start": "nodemon -L --watch src main.ts"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "nodemon": "^3.1.7",
     "pg": "^8.11.1",
     "typeorm": "^0.3.17",
     "typescript": "^5.1.6"

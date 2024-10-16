@@ -2,6 +2,6 @@ import { Entity } from "./Entity";
 
 export type IncomeItem = Entity & {
   value: number;
-  typeId: number;
-  dateCreate: Date;
+  type: { id: number; name: string };
+  date: Date;
 };
