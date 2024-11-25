@@ -9,7 +9,7 @@ export default function ExpenseList() {
         title="Список доходов"
         icon={<ArrowCircleUpIcon sx={{ width: "40px", height: "40px" }} />}
       ></PageHeader>
-      <OperationItemsList operation="expense" />
+      <OperationItemsList operation="income" />
     </>
   );
 }

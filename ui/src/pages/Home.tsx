@@ -1,15 +1,20 @@
-import { Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
 import LatestItems from "../components/LatestItems";
 import { useNavigate } from "react-router-dom";
-import Diagram from "../components/Diagram";
+import ExpenseIncomeRatioPieChart from "../components/ExpenseIncomeRatioPieChart";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { palette } = useTheme();
+
+  console.log(palette);
 
   return (
     <>
-      <LatestItems />
-      <Diagram />
+      <Box sx={{ marginBottom: "24px" }}>
+        <LatestItems />
+      </Box>
+      <ExpenseIncomeRatioPieChart />
       <Typography
         component="h2"
         sx={{ fontSize: "32px", textAlign: "center", whiteSpace: "nowrap" }}
@@ -19,8 +24,12 @@ export default function Home() {
       <Stack spacing={2} mt={5}>
         <Button
           variant="contained"
-          sx={{ height: "75px", fontSize: "24px", textTransform: "unset" }}
-          color="primary"
+          sx={{
+            height: "75px",
+            backgroundColor: palette.primary.main,
+            fontSize: "24px",
+            textTransform: "unset",
+          }}
           size="large"
           onClick={() => navigate("/income/add")}
         >
@@ -29,12 +38,12 @@ export default function Home() {
         <Button
           variant="contained"
           size="large"
+          color="primary"
           sx={{
-            backgroundColor: "darkgray",
+            backgroundColor: palette.primary.light,
             fontSize: "24px",
             textTransform: "unset",
             height: "75px",
-            "&:hover": { backgroundColor: "gray" },
           }}
           onClick={() => navigate("/expense/add")}
         >

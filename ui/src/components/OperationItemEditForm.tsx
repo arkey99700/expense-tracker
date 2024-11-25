@@ -121,7 +121,7 @@ export default function OperationItemEditForm({
       >
         <TextField
           value={name}
-          label="Назначение"
+          label={operation === "expense" ? "Назначение" : "Источник"}
           id="name"
           fullWidth
           onChange={(event) => {
@@ -129,7 +129,11 @@ export default function OperationItemEditForm({
             setName(event.target.value);
           }}
           error={nameError}
-          helperText={nameError && "Введите назначене"}
+          helperText={
+            nameError &&
+            `Введите ${operation === "expense" ? "назначение" : "источник"}`
+          }
+          inputProps={{ maxLength: 255 }}
           InputProps={{
             endAdornment: name && (
               <IconButton onClick={() => setName("")}>
@@ -193,6 +197,7 @@ export default function OperationItemEditForm({
                 typeError &&
                 `Введите тип ${operation === "expense" ? "расхода" : "дохода"}`
               }
+              inputProps={{ ...params.inputProps, maxLength: 255 }}
               label={`Тип ${operation === "expense" ? "расхода" : "дохода"}`}
             />
           )}
