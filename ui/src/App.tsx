@@ -9,7 +9,7 @@ const theme = createTheme();
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
         <Router />
       </LocalizationProvider>
     </ThemeProvider>
