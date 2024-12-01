@@ -46,22 +46,15 @@ export default function OperationItemEditForm({
   currentDate,
   currentType,
 }: Props) {
-  const {
-    register,
-    handleSubmit,
-    formState,
-    resetField,
-    watch,
-    control,
-    clearErrors,
-  } = useForm<Inputs>({
-    defaultValues: {
-      name: currentName,
-      sum: currentSum,
-      date: currentDate,
-      type: currentType,
-    },
-  });
+  const { handleSubmit, formState, resetField, watch, control, clearErrors } =
+    useForm<Inputs>({
+      defaultValues: {
+        name: currentName,
+        sum: currentSum,
+        date: currentDate,
+        type: currentType,
+      },
+    });
   const [types, setTypes] = useState<
     ExpenseOrIncome<typeof operation, "type">[]
   >([]);
@@ -79,7 +72,7 @@ export default function OperationItemEditForm({
   }, [operation]);
 
   const submitForm: SubmitHandler<Inputs> = async (data): Promise<void> => {
-    return console.log(data, formState);
+    return console.log(data);
 
     let typeId = types.find((existingType) => existingType.name === type)?.id;
 
@@ -127,15 +120,11 @@ export default function OperationItemEditForm({
           rules={{
             required: true,
           }}
-          render={({
-            field: { onChange, onBlur, value },
-            fieldState: { error },
-          }) => (
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
               fullWidth
               value={value || ""}
               onChange={onChange}
-              onBlur={onBlur}
               label={operation === "expense" ? "Назначение" : "Источник"}
               error={Boolean(error)}
               helperText={
@@ -154,26 +143,30 @@ export default function OperationItemEditForm({
           )}
         ></Controller>
 
-        {/* <NumberInput
-          value={Number(sum)}
-          label="Сумма"
-          id="sum"
-          fullWidth
-          onChange={(value) => {
-            setSumError(false);
-            setSum(value);
-          }}
-          min={0}
-          max={maxSumNumber}
-          step={0.01}
-          decimalScale={2}
-          hideActionButtons={true}
-          textAlign="left"
-          error={sumError}
-          helperText={sumError ? "Введите сумму" : ""}
-        />
+        <Controller
+          name="sum"
+          control={control}
+          defaultValue={formState.defaultValues?.sum}
+          rules={{ required: true, validate: (value) => value > 0 }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <NumberInput
+              fullWidth
+              value={value || 0}
+              label="Сумма"
+              onChange={onChange}
+              min={0}
+              max={maxSumNumber}
+              step={0.01}
+              decimalScale={2}
+              hideActionButtons={true}
+              textAlign="left"
+              error={Boolean(error)}
+              helperText={error ? "Введите положительное число" : ""}
+            />
+          )}
+        ></Controller>
 
-        <DatePicker
+        {/*<DatePicker
           label="Дата"
           defaultValue={dayjs()}
           value={date}
