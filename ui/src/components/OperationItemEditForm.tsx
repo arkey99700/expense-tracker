@@ -46,7 +46,7 @@ export default function OperationItemEditForm({
   currentDate,
   currentType,
 }: Props) {
-  const { handleSubmit, formState, resetField, watch, control } =
+  const { handleSubmit, formState, resetField, watch, control, reset } =
     useForm<Inputs>({
       defaultValues: {
         name: currentName ?? "",
@@ -72,14 +72,14 @@ export default function OperationItemEditForm({
   }, [operation]);
 
   const submitForm: SubmitHandler<Inputs> = async (data): Promise<void> => {
-    return console.log(data);
-
-    let typeId = types.find((existingType) => existingType.name === type)?.id;
+    let typeId = types.find(
+      (existingType) => existingType.name === data.type
+    )?.id;
 
     if (!typeId) {
       await axios
         .post(routes[`${capitalize(operation)}Type` as RouteName], {
-          name: type,
+          name: data.type,
         })
         .then((result) => {
           typeId = result.data.id;
@@ -88,17 +88,14 @@ export default function OperationItemEditForm({
 
     axios
       .post(routes[`${capitalize(operation)}Item` as RouteName], {
-        name,
-        value: sum,
-        dateCreate: date.toDate(),
+        name: data.name,
+        value: data.sum,
+        dateCreate: data.date.toDate(),
         type: typeId,
       })
       .then(() => {
         setShowAlert(true);
-        setName("");
-        setSum(0);
-        setDate(dayjs());
-        setType("");
+        reset();
       });
   };
 
