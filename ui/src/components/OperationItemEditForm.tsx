@@ -188,41 +188,54 @@ export default function OperationItemEditForm({
           )}
         ></Controller>
 
-        {/*<Autocomplete
-          value={type}
-          id="source"
-          popupIcon={<ExpandMoreIcon />}
-          options={
-            types.length
-              ? types.sort((a, b) => (a > b ? 1 : -1)).map((type) => type.name)
-              : ["Новый тип расхода"]
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              error={typeError}
-              helperText={
-                typeError &&
-                `Введите тип ${operation === "expense" ? "расхода" : "дохода"}`
+        <Controller
+          name="type"
+          control={control}
+          defaultValue={formState.defaultValues?.type}
+          rules={{ required: true }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <Autocomplete
+              freeSolo
+              autoSelect
+              value={value}
+              popupIcon={<ExpandMoreIcon />}
+              options={
+                types.length
+                  ? types
+                      .sort((a, b) => (a > b ? 1 : -1))
+                      .map((type) => type.name)
+                  : [
+                      `Новый тип ${
+                        operation === "expense" ? "расхода" : "дохода"
+                      }`,
+                    ]
               }
-              inputProps={{ ...params.inputProps, maxLength: 255 }}
-              label={`Тип ${operation === "expense" ? "расхода" : "дохода"}`}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  error={Boolean(error)}
+                  helperText={
+                    error &&
+                    `Введите тип ${
+                      operation === "expense" ? "расхода" : "дохода"
+                    }`
+                  }
+                  inputProps={{ ...params.inputProps, maxLength: 255 }}
+                  label={`Тип ${
+                    operation === "expense" ? "расхода" : "дохода"
+                  }`}
+                />
+              )}
+              getOptionLabel={(option) => option}
+              filterOptions={(options, state) => {
+                const filtered = stringFilter(options, state);
+
+                return filtered.length ? filtered : [state.inputValue];
+              }}
+              onChange={(_, value) => onChange(value)}
             />
           )}
-          getOptionLabel={(option) => option}
-          freeSolo
-          filterOptions={(options, state) => {
-            const filtered = stringFilter(options, state);
-
-            return filtered.length ? filtered : [state.inputValue];
-          }}
-          autoSelect
-          onChange={(_, value) => {
-            setTypeError(false);
-
-            setType(value ?? "");
-          }}
-        /> */}
+        ></Controller>
 
         <Button
           variant="contained"
