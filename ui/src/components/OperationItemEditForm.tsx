@@ -82,7 +82,9 @@ export default function OperationItemEditForm({
           name: data.type,
         })
         .then((result) => {
-          typeId = result.data.id;
+          /** TODO: add check for api errors etc. */
+          typeId = result.data.id as number;
+          setTypes([...types, { id: typeId, name: result.data.name }]);
         });
     }
 
