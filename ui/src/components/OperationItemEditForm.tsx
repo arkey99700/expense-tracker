@@ -46,13 +46,13 @@ export default function OperationItemEditForm({
   currentDate,
   currentType,
 }: Props) {
-  const { handleSubmit, formState, resetField, watch, control, clearErrors } =
+  const { handleSubmit, formState, resetField, watch, control } =
     useForm<Inputs>({
       defaultValues: {
-        name: currentName,
-        sum: currentSum,
-        date: currentDate,
-        type: currentType,
+        name: currentName ?? "",
+        sum: currentSum ?? 0,
+        date: currentDate ?? dayjs(),
+        type: currentType ?? "",
       },
     });
   const [types, setTypes] = useState<
@@ -166,25 +166,29 @@ export default function OperationItemEditForm({
           )}
         ></Controller>
 
-        {/*<DatePicker
-          label="Дата"
-          defaultValue={dayjs()}
-          value={date}
-          onChange={(newValue) => {
-            setDateError(false);
-            newValue && setDate(newValue);
-          }}
-          sx={{ flexGrow: 1 }}
-          slotProps={{
-            textField: {
-              fullWidth: true,
-              error: dateError,
-              helperText: dateError ? "Введите дату" : "",
-            },
-          }}
-        />
+        <Controller
+          name="date"
+          control={control}
+          defaultValue={(formState.defaultValues as Inputs).date}
+          rules={{ required: true }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <DatePicker
+              label="Дата"
+              value={value}
+              onChange={onChange}
+              sx={{ flexGrow: 1 }}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  error: Boolean(error),
+                  helperText: error ? "Введите дату" : "",
+                },
+              }}
+            />
+          )}
+        ></Controller>
 
-        <Autocomplete
+        {/*<Autocomplete
           value={type}
           id="source"
           popupIcon={<ExpandMoreIcon />}
