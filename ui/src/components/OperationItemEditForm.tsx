@@ -15,7 +15,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClearIcon from "@mui/icons-material/Clear";
 import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import routes, { RouteName } from "../api/Routes";
 import NumberInput from "./NumberInput";
 import { maxSumNumber } from "../utils/utils";
@@ -46,13 +46,27 @@ export default function OperationItemEditForm({
   currentDate,
   currentType,
 }: Props) {
-  const { register, handleSubmit, formState, getValues, setValue } =
-    useForm<Inputs>();
+  const {
+    register,
+    handleSubmit,
+    formState,
+    resetField,
+    watch,
+    control,
+    clearErrors,
+  } = useForm<Inputs>({
+    defaultValues: {
+      name: currentName,
+      sum: currentSum,
+      date: currentDate,
+      type: currentType,
+    },
+  });
   const [types, setTypes] = useState<
     ExpenseOrIncome<typeof operation, "type">[]
   >([]);
-
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const watchName = watch("name");
 
   useEffect(() => {
     axios
@@ -65,23 +79,7 @@ export default function OperationItemEditForm({
   }, [operation]);
 
   const submitForm: SubmitHandler<Inputs> = async (data): Promise<void> => {
-    if (!name) {
-      return setNameError(true);
-    }
-
-    if (!sum) {
-      return setSumError(true);
-    }
-
-    if (!date.isValid()) {
-      return setDateError(true);
-    }
-
-    if (!type) {
-      return setTypeError(true);
-    }
-
-    return;
+    return console.log(data, formState);
 
     let typeId = types.find((existingType) => existingType.name === type)?.id;
 
@@ -122,26 +120,39 @@ export default function OperationItemEditForm({
           },
         }}
       >
-        <TextField
-          defaultValue={currentName}
-          label={operation === "expense" ? "Назначение" : "Источник"}
-          id="name"
-          fullWidth
-          error={Boolean(formState.errors.name)}
-          helperText={
-            formState.errors.name &&
-            `Введите ${operation === "expense" ? "назначение" : "источник"}`
-          }
-          inputProps={{ maxLength: 255 }}
-          InputProps={{
-            ...register("name"),
-            endAdornment: getValues("name") && (
-              <IconButton onClick={() => setValue("name", "")}>
-                <ClearIcon />
-              </IconButton>
-            ),
+        <Controller
+          name="name"
+          control={control}
+          defaultValue={formState.defaultValues?.name}
+          rules={{
+            required: true,
           }}
-        />
+          render={({
+            field: { onChange, onBlur, value },
+            fieldState: { error },
+          }) => (
+            <TextField
+              fullWidth
+              value={value || ""}
+              onChange={onChange}
+              onBlur={onBlur}
+              label={operation === "expense" ? "Назначение" : "Источник"}
+              error={Boolean(error)}
+              helperText={
+                error &&
+                `Введите ${operation === "expense" ? "назначение" : "источник"}`
+              }
+              inputProps={{ maxLength: 255 }}
+              InputProps={{
+                endAdornment: watchName && (
+                  <IconButton onClick={() => resetField("name")}>
+                    <ClearIcon />
+                  </IconButton>
+                ),
+              }}
+            ></TextField>
+          )}
+        ></Controller>
 
         {/* <NumberInput
           value={Number(sum)}
@@ -226,7 +237,7 @@ export default function OperationItemEditForm({
           }}
           color="primary"
           size="large"
-          // onClick={submitForm}
+          onClick={handleSubmit(submitForm)}
         >
           Добавить
         </Button>
