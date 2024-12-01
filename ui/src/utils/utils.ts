@@ -1,7 +1,7 @@
-const maxSumNumber = 999999999;
+const maxSumNumber = 999_999_999;
 
 const clampNumber = (
-  val: any,
+  val: unknown,
   min = -Infinity,
   max = Infinity,
   decimalScale = 0
