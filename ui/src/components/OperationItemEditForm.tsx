@@ -10,7 +10,7 @@ import {
   Alert,
   capitalize,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+import { DatePicker, LocalizationProvider, ruRU } from "@mui/x-date-pickers";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClearIcon from "@mui/icons-material/Clear";
 import dayjs, { Dayjs } from "dayjs";
@@ -21,6 +21,7 @@ import NumberInput from "./NumberInput";
 import { maxSumNumber } from "../utils/utils";
 import { OperationType } from "../types/OperationType";
 import { ExpenseOrIncome } from "../types/entities/ExpenseOrIncome";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type Inputs = {
   name: string;
