@@ -125,12 +125,9 @@ export default function OperationItemEditForm({
               fullWidth
               value={value || ""}
               onChange={onChange}
-              label={operation === "expense" ? "Назначение" : "Источник"}
+              label="Название"
               error={Boolean(error)}
-              helperText={
-                error &&
-                `Введите ${operation === "expense" ? "назначение" : "источник"}`
-              }
+              helperText={error && `Введите название`}
               inputProps={{ maxLength: 255 }}
               InputProps={{
                 endAdornment: watchName && (
@@ -205,7 +202,7 @@ export default function OperationItemEditForm({
                       .sort((a, b) => (a > b ? 1 : -1))
                       .map((type) => type.name)
                   : [
-                      `Новый тип ${
+                      `Новая категория ${
                         operation === "expense" ? "расхода" : "дохода"
                       }`,
                     ]
@@ -216,12 +213,12 @@ export default function OperationItemEditForm({
                   error={Boolean(error)}
                   helperText={
                     error &&
-                    `Введите тип ${
+                    `Введите категорию ${
                       operation === "expense" ? "расхода" : "дохода"
                     }`
                   }
                   inputProps={{ ...params.inputProps, maxLength: 255 }}
-                  label={`Тип ${
+                  label={`Категория ${
                     operation === "expense" ? "расхода" : "дохода"
                   }`}
                 />
