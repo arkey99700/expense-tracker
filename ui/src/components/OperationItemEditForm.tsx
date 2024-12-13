@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Autocomplete,
   Box,
@@ -6,11 +6,9 @@ import {
   TextField,
   createFilterOptions,
   IconButton,
-  Snackbar,
-  Alert,
   capitalize,
 } from "@mui/material";
-import { DatePicker, LocalizationProvider, ruRU } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ClearIcon from "@mui/icons-material/Clear";
 import dayjs, { Dayjs } from "dayjs";
@@ -21,7 +19,7 @@ import NumberInput from "./NumberInput";
 import { maxSumNumber } from "../utils/utils";
 import { OperationType } from "../types/OperationType";
 import { ExpenseOrIncome } from "../types/entities/ExpenseOrIncome";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { AlertContext } from "../contexts/alertContext";
 
 type Inputs = {
   name: string;
@@ -59,18 +57,28 @@ export default function OperationItemEditForm({
   const [types, setTypes] = useState<
     ExpenseOrIncome<typeof operation, "type">[]
   >([]);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
   const watchName = watch("name");
+  const alertContext = useContext(AlertContext);
 
   useEffect(() => {
     axios
       .get<ExpenseOrIncome<typeof operation, "type">[]>(
         routes[`${capitalize(operation)}Type` as RouteName]
       )
-      .then((result): void => {
+      .then((result) => {
         setTypes(result.data);
+      })
+      .catch((error) => {
+        console.error(error);
+
+        alertContext?.showAlert(
+          `Не удалось получить данные о категориях ${
+            operation === "expense" ? "расходов" : "доходов"
+          }`,
+          "error"
+        );
       });
-  }, [operation]);
+  }, [operation, alertContext]);
 
   const submitForm: SubmitHandler<Inputs> = async (data): Promise<void> => {
     let typeId = types.find(
@@ -78,15 +86,26 @@ export default function OperationItemEditForm({
     )?.id;
 
     if (!typeId) {
-      await axios
-        .post(routes[`${capitalize(operation)}Type` as RouteName], {
-          name: data.type,
-        })
-        .then((result) => {
-          /** TODO: add check for api errors etc. */
-          typeId = result.data.id as number;
-          setTypes([...types, { id: typeId, name: result.data.name }]);
-        });
+      try {
+        const result = await axios.post(
+          routes[`${capitalize(operation)}Type` as RouteName],
+          {
+            name: data.type,
+          }
+        );
+
+        typeId = result.data.id as number;
+        setTypes([...types, { id: typeId, name: result.data.name }]);
+      } catch (error) {
+        console.error(error);
+
+        alertContext?.showAlert(
+          `Произошла ошибка при добавлении категории ${
+            operation === "expense" ? "расхода" : "дохода"
+          }`,
+          "error"
+        );
+      }
     }
 
     axios
@@ -97,8 +116,22 @@ export default function OperationItemEditForm({
         type: typeId,
       })
       .then(() => {
-        setShowAlert(true);
+        alertContext?.showAlert(
+          `${operation === "expense" ? "Расход" : "Доход"} успешно добавлен!`,
+          "success"
+        );
+
         reset();
+      })
+      .catch((error) => {
+        console.error(error);
+
+        alertContext?.showAlert(
+          `Произошла ошибка при добавлении ${
+            operation === "expense" ? "расхода" : "дохода"
+          }`,
+          "error"
+        );
       });
   };
 
@@ -249,21 +282,6 @@ export default function OperationItemEditForm({
           Добавить
         </Button>
       </Box>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={showAlert}
-        autoHideDuration={4000}
-        onClose={() => setShowAlert(false)}
-      >
-        <Alert
-          severity="success"
-          variant="filled"
-          onClose={() => setShowAlert(false)}
-        >
-          {operation === "expense" ? "Расход" : "Доход"} успешно добавлен!
-        </Alert>
-      </Snackbar>
     </>
   );
 }

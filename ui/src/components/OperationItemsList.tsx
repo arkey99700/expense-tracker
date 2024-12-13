@@ -127,7 +127,9 @@ export default function OperationItemsList({ operation }: Props) {
             pagination: { paginationModel: { pageSize, page } },
           }}
           processRowUpdate={async (updatedRow, originalRow) =>
-            updateRow(diffRows(originalRow, updatedRow)).then(() => updatedRow)
+            updateRow(originalRow.id, diffRows(originalRow, updatedRow)).then(
+              () => updatedRow
+            )
           }
         />
       ) : (

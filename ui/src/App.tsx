@@ -5,6 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { createTheme } from "@mui/material";
 import { ruRU } from "@mui/x-date-pickers/locales";
 import "dayjs/locale/ru";
+import { AlertProvider } from "./contexts/alertContext";
 
 const theme = createTheme();
 
@@ -18,7 +19,9 @@ export default function App() {
           ruRU.components.MuiLocalizationProvider.defaultProps.localeText
         }
       >
-        <Router />
+        <AlertProvider>
+          <Router />
+        </AlertProvider>
       </LocalizationProvider>
     </ThemeProvider>
   );
