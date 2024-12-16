@@ -16,34 +16,46 @@ class EntityService {
     try {
       const entity = this.entityClass.create({ ...params });
       return await entity.save();
-    } catch (e) {
-      return { error: e };
+    } catch (error) {
+      return { error };
     }
   }
 
   async update(id: string, params: DBEntity) {
-    await this.entityClass.update(id, params);
+    try {
+      await this.entityClass.update(id, params);
 
-    return this.entityClass.findOne({ where: { id: Number(id) } });
+      return this.entityClass.findOne({ where: { id: Number(id) } });
+    } catch (error) {
+      return { error };
+    }
   }
 
   async delete(id: string) {
     try {
       return await this.entityClass.delete(id);
-    } catch (e) {
-      return { error: e };
+    } catch (error) {
+      return { error };
     }
   }
 
   async findById(id: string) {
-    return await this.entityClass.findOne({ where: { id: Number(id) } });
+    try {
+      return await this.entityClass.findOne({ where: { id: Number(id) } });
+    } catch (error) {
+      return { error };
+    }
   }
 
   async find(params?: QueryParams) {
-    return await this.entityClass.find({
-      skip: params?.offset,
-      take: params?.limit,
-    });
+    try {
+      return await this.entityClass.find({
+        skip: params?.offset,
+        take: params?.limit,
+      });
+    } catch (error) {
+      return { error };
+    }
   }
 }
 
