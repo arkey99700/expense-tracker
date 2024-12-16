@@ -1,19 +1,20 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { OperationType } from "../types/OperationType";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ExpenseOrIncome } from "../types/entities/ExpenseOrIncome";
 import axios from "axios";
 import { ExpenseItem } from "../types/entities/ExpenseItem";
 import routes, { RouteName } from "../api/Routes";
 import { Box, capitalize, CircularProgress, Typography } from "@mui/material";
 import { diff } from "deep-object-diff";
+import { AlertContext } from "../contexts/alertContext";
 
 type Props = {
   operation: OperationType;
 };
 
-type Row = {
+type Row = { [key: string]: unknown } & {
   id: number;
   name: string;
   value: number;
@@ -41,7 +42,7 @@ const columns: GridColDef<Row>[] = [
     editable: true,
   },
   {
-    field: "created",
+    field: "date",
     headerName: "Дата",
     flex: 1,
     type: "date",
@@ -64,16 +65,27 @@ export default function OperationItemsList({ operation }: Props) {
   const [rows, setRows] = useState<Row[]>([]);
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
+  const alertContext = useContext(AlertContext);
 
-  const updateRow = async (id: number, values: Partial<Row>) => {
+  const updateRow = async (
+    id: number,
+    values: Partial<Row>
+  ): Promise<boolean> => {
+    if (!Object.keys(values).length) {
+      return false;
+    }
+
     // only name, value and date for now
-    axios
-      .patch(routes[`${capitalize(operation)}Item` as RouteName], values)
-      .then((result) => {
-        console.log(result);
-      });
+    if (values.id) {
+      delete values.id;
+    }
 
-    console.log(values);
+    axios.patch(
+      `${routes[`${capitalize(operation)}Item` as RouteName]}/${id}`,
+      values
+    );
+
+    return true;
   };
 
   useEffect(() => {
@@ -126,11 +138,46 @@ export default function OperationItemsList({ operation }: Props) {
           initialState={{
             pagination: { paginationModel: { pageSize, page } },
           }}
-          processRowUpdate={async (updatedRow, originalRow) =>
-            updateRow(originalRow.id, diffRows(originalRow, updatedRow)).then(
-              () => updatedRow
-            )
-          }
+          processRowUpdate={async (updatedRow, originalRow) => {
+            for (const cellName in updatedRow) {
+              if (typeof updatedRow[cellName] === "string") {
+                updatedRow[cellName] = updatedRow[cellName].trim();
+              }
+
+              // no falsy values for now
+              if (!updatedRow[cellName]) {
+                delete updatedRow[cellName];
+              }
+            }
+
+            return updateRow(
+              originalRow.id,
+              diffRows(originalRow, updatedRow)
+            ).then((result) => {
+              if (result) {
+                alertContext?.showAlert(
+                  `${
+                    operation === "expense" ? "Расход" : "Доход"
+                  } успешно изменен`,
+                  "success"
+                );
+
+                return updatedRow;
+              } else {
+                return originalRow;
+              }
+            });
+          }}
+          onProcessRowUpdateError={(error) => {
+            console.log(error);
+
+            alertContext?.showAlert(
+              `Произошла ошибка при изменении ${
+                operation === "expense" ? "расхода" : "дохода"
+              }`,
+              "error"
+            );
+          }}
         />
       ) : (
         <Typography>

@@ -32,10 +32,12 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
         open={open}
         autoHideDuration={5000}
         onClose={hideAlert}
-        message={message}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{ top: "84px !important" }}
       >
-        <Alert severity={severity} variant="filled" onClose={hideAlert}></Alert>
+        <Alert severity={severity} variant="filled" onClose={hideAlert}>
+          {message}
+        </Alert>
       </Snackbar>
     </AlertContext.Provider>
   );
